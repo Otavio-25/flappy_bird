@@ -1,7 +1,8 @@
 const sprites = new Image();
 sprites.src = './sprites.png';
 
-
+const som_punch = new Audio();
+som_punch.src = './som/punch.wav';
 const canvas = document.querySelector('#game-canvas');
 const contexto = canvas.getContext('2d')
 contexto.fillStyle='#70c5ce';
@@ -10,8 +11,12 @@ const flappyBird = {
     spriteY:0,
     largura:35,
     altura:25,
-    x:10,
+    x:10, 
     y:50,
+    pulo: 4.6,
+    pula() {
+        flappyBird.velocidade = -flappyBird.pulo;
+    },
     desenha(){
         contexto.drawImage(
             sprites,
@@ -24,9 +29,13 @@ const flappyBird = {
     gravidade: 0.25,
     velocidade: 0,
     atualiza(){
+        if(fazColisao()) {
+            som_punch.play();
+            telaAtiva = TelaIncio;
+            return;
+        }
         flappyBird.velocidade += flappyBird.gravidade;
         flappyBird.y = flappyBird.y + flappyBird.velocidade;
-        flappyBird.x = flappyBird.x + 2;
     }
 }
 const cenario = {
@@ -125,16 +134,22 @@ const TelaJogo = {
         flappyBird.desenha();
         flappyBird.atualiza();
     },
-    click(){}
+    click(){
+        flappyBird.pula();
+    }
 }
 window.addEventListener("click", mudaTelaAtiva)
 function loop(){
     telaAtiva.desenha()
     requestAnimationFrame(loop)
 }
-
-
-
+ function fazColisao(){
+    if(flappyBird.y + flappyBird.altura >= chao.y){
+        return true;
+    } else{
+        return false;
+    }
+ }
 
 loop()
 
