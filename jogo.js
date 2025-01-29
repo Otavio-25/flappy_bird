@@ -6,6 +6,7 @@ som_punch.src = './som/punch.wav';
 const canvas = document.querySelector('#game-canvas');
 const contexto = canvas.getContext('2d')
 contexto.fillStyle='#70c5ce';
+let animation_frame = 0;
 const flappyBird = {
     spriteX:0,
     spriteY:0,
@@ -14,6 +15,12 @@ const flappyBird = {
     x:10, 
     y:50,
     pulo: 4.6,
+    movimentos : [
+        {spriteX: 0, spriteY: 0, },
+        {spriteX: 0, spriteY: 26, },
+        {spriteX: 0, spriteY: 52, },
+        {spriteX: 0, spriteY: 26, },
+    ],
     pula() {
         flappyBird.velocidade = -flappyBird.pulo;
     },
@@ -36,7 +43,17 @@ const flappyBird = {
         }
         flappyBird.velocidade += flappyBird.gravidade;
         flappyBird.y = flappyBird.y + flappyBird.velocidade;
-    }
+        flappyBird.atualizaFrame();
+    },
+    frameAtual: 0,
+    atualizaFrame(){
+        if ((animation_frame % 10) == 0){
+            flappyBird.frameAtual = flappyBird.frameAtual + 1;
+        flappyBird.frameAtual = flappyBird.frameAtual % flappyBird.movimentos.length;
+        flappyBird.spriteX = flappyBird.movimentos[flappyBird.frameAtual].spriteX;
+        flappyBird.spriteY = flappyBird.movimentos[flappyBird.frameAtual].spriteY;
+        }
+    },
 }
 const cenario = {
     spriteX:390,
@@ -53,10 +70,6 @@ const cenario = {
             cenario.largura, cenario.altura,
             cenario.x, cenario.y,
             cenario.largura, cenario.altura,
-
-
-
-
         );
         contexto.drawImage(
             sprites,
@@ -66,6 +79,10 @@ const cenario = {
             cenario.largura, cenario.altura,
            
         );
+    },
+    atualiza(){
+        cenario.x = cenario.x - 0.5;
+        cenario.x = cenario.x % (cenario.largura / 2);
     }
 }
 const chao = {
@@ -91,6 +108,10 @@ const chao = {
             chao.largura, chao.altura,
            
         );
+    },
+    atualiza(){
+        chao.x = chao.x - 1;
+        chao.x = chao.x % (chao.largura / 2);
     }
 }
 const inicio = {
@@ -123,14 +144,15 @@ const TelaIncio = {
 }
 var telaAtiva = TelaIncio;
 
-
 function mudaTelaAtiva(){
     telaAtiva.click();
 }
 const TelaJogo = {
     desenha(){
         cenario.desenha();
+        cenario.atualiza();
         chao.desenha();
+        chao.atualiza();
         flappyBird.desenha();
         flappyBird.atualiza();
     },
@@ -141,7 +163,8 @@ const TelaJogo = {
 window.addEventListener("click", mudaTelaAtiva)
 function loop(){
     telaAtiva.desenha()
-    requestAnimationFrame(loop)
+    requestAnimationFrame(loop);
+    animation_frame = animation_frame + 1;
 }
  function fazColisao(){
     if(flappyBird.y + flappyBird.altura >= chao.y){
