@@ -76,13 +76,19 @@ const cenario = {
             cenario.spriteX, cenario.spriteY,
             cenario.largura, cenario.altura,
             cenario.x + cenario.largura, cenario.y,
+            cenario.largura, cenario.altura,  
+        );
+        contexto.drawImage(
+            sprites,
+            cenario.spriteX, cenario.spriteY,
             cenario.largura, cenario.altura,
-           
+            cenario.x + (cenario.largura * 2), cenario.y,
+            cenario.largura, cenario.altura, 
         );
     },
     atualiza(){
         cenario.x = cenario.x - 0.5;
-        cenario.x = cenario.x % (cenario.largura / 2);
+        cenario.x = cenario.x % (cenario.largura);
     }
 }
 const chao = {
