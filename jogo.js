@@ -22,7 +22,7 @@ const canos = {
         spriteY: 169
     },
     pares: [],
-    espacamentoEntreCanos: 120,
+    espacamentoEntreCanos: 85,
     desenha() {
         for(i=0; i<canos.pares.length; i++) {
             canos.ceu.x = canos.pares[i].x;
@@ -69,21 +69,21 @@ const canos = {
                 return;
             }
             
-            function fazColisaoObstaculo(par) {
-                if(flappyBird.x >= par.x) {
-                    const alturaCabecaFlappy = flappyBird.y;
-                    const alturaPeFlappy = flappyBird.y + flappyBird.altura;
-                    const bocaCanoCeuY = par.y + canos.altura;
-                    const bocaCanoChaoY = par.y + canos.altura + canos.espacamentoEntreCanos;
-                    if (alturaCabecaFlappy <= bocaCanoCeuY) {
-                        return true;
-                    }
-                    if (alturaPeFlappy >= bocaCanoChaoY) {
-                        return true;
-                    }
+        function fazColisaoObstaculo(par) {
+            if(flappyBird.x >= par.x - 25) {
+                const alturaCabecaFlappy = flappyBird.y;
+                const alturaPeFlappy = flappyBird.y + flappyBird.altura;
+                const bocaCanoCeuY = par.y + canos.altura;
+                const bocaCanoChaoY = par.y + canos.altura + canos.espacamentoEntreCanos;
+                if (alturaCabecaFlappy <= bocaCanoCeuY) {
+                    return true;
                 }
-                return false;
-            }   
+                if (alturaPeFlappy >= bocaCanoChaoY) {
+                    return true;
+                }
+            }
+            return false;
+        }   
         }
     }
 }
